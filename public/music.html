@@ -1,0 +1,111 @@
+<!-- The boring stuff -->
+<!DOCTYPE html>
+<html>
+	<head>
+	  <meta charset="UTF-8">
+	  <title>What's that Song - Music</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
+	  <meta name="description" content="DESCRIBE YOUR WEBSITE">
+	  <meta name="keywords" content="KEY, WORDS, HERE">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	</head>
+  <link href="main.css" rel ="stylesheet">
+	<body>
+    <div>
+      <img id= "image7"
+           src= "https://img.clipartfest.com/a20882a330289214ea3c48acc95a1fad_music-note-notes-icon-music-note-clipart-transparent-background_512-512.png">
+      <h2> What's that Song? </h2>
+    </div>
+    <ul id= "menu"> 
+      <li class= "menuitem"><a href="index.html"> Home </a></li>
+      <li class= "menuitem"><a href="music.html">Lyrics</a></li>
+      <li class= "menuitem"><a href="movies.html">Movies</a></li>
+      <li class= "menuitem"><a href="shows.html">Shows</a></li>
+    </ul>
+    <h1 style="text-align:center"> What's that Song?</h1>
+    <img id= "image6"
+         src= "https://lh6.ggpht.com/15ph_ECo31slWrvgAj3wAjHHu4x52S2PsKaVxIF7dUYrGLgJw0NJLLe-jYInBJLEOg=h900">
+    <h3> Find your favorite songs here! </h3>
+    <table style="margin:auto">
+        <tr>
+        <td style="width:80%">
+          <input class="searchBar" type="text" name="search" placeholder="Type lyrics here" id="lyric">
+          </td>
+          <td>
+        <input class="searchButton" type="sbutton" value="Search" id="search">
+          </td>
+        </tr>
+      </table>
+    <br>
+    <div id="result"></div>
+    <script style="scriptstyle">
+    document.getElementById("search").addEventListener("click",
+    // Stuff that happens when the button is clicked
+      function (event) {
+        var lyric = document.getElementById("lyric").value;
+        console.log(lyric);
+        // Ajax call Musixmatch API
+        $.ajax({
+          type: "GET",
+          data: {
+            apikey:"309788821d050a0623303261b9ddedc4",
+            q_lyrics: lyric,
+            f_has_lyrics: 1,
+            format:"jsonp",
+            callback:"jsonp_callback",
+            s_track_rating: "desc"
+          },
+          url: "https://api.musixmatch.com/ws/1.1/track.search",
+          dataType: "jsonp",
+          jsonpCallback: 'jsonp_callback',
+          contentType: 'application/json',
+          success: function(data) {
+            var json = data;
+            if (json.message.header.status_code != 200) {
+              alert("error");
+            }
+            else { 
+              console.log(json);
+              var content = "<table id='resultTable'>";
+              content += "<thead><tr><th>Album</th><th>Artist</th><th>Track name</th></tr></thead>"
+              content += "<caption>Top Matches</caption>"
+              for (var key in json.message.body.track_list) {
+                if (json.message.body.track_list.hasOwnProperty(key)) {
+                  content += "<tr><td>"
+                  content += json.message.body.track_list[key].track.album_name;
+                  content += "</td><td>";
+                  content += json.message.body.track_list[key].track.artist_name;
+                  content += "</td><td>";
+                  content += json.message.body.track_list[key].track.track_name;
+                  content += "</td></tr>";
+                }
+            }
+              document.getElementById("result").innerHTML=content;
+              console.log(content);
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            alert("error");
+            console.log(jqXHR);
+            console.log(textStatus);
+            console.log(errorThrown);
+          }
+        });
+      });
+    </script>
+  </body>
+ <footer>
+    <br>
+    <div style="display:block; margin: 0 auto; text-align:center;">
+      <p class="text-muted">Made with <span style="color: pink">♥</span> by the What's That Song FemmeHacks team</p>
+    </div>
+    <div class="text-center" style="position:absolute;display:block;margin: 0 auto; text-align:center;">
+	    <ul align="center" style= "list-style:none; text-align:center;">
+			  <li class="makefloat"><a href="mailto:songhackers@gmail.com"><i class="fa fa-envelope-o fa-fw fa-3x"></i></a></li>
+			  <li class="makefloat"><a href="https://www.facebook.com/femmehacks" target="_blank"><i class="fa fa-facebook fa-fw fa-3x"></i></a></li>
+			  <li class="makefloat"><a href="https://www.twitter.com/femmehacks" target="_blank"><i class="fa fa-twitter fa-fw fa-3x"></i></a></li>
+        <li class="makefloat"><a href="https://www.instagram.com/femmehacks/" target="_blank"><i class="fa fa-instagram fa-fw fa-3x"></i></a></li>
+      </ul> 
+    </div>
+  </footer>
+  </html>
